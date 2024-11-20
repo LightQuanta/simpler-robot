@@ -56,9 +56,9 @@ module simbot.api {
     exports love.forte.simbot.plugin;
     exports love.forte.simbot.resource;
 
-    uses ComponentFactoryProvider;
-    uses ComponentFactoryConfigurerProvider;
-    uses PluginFactoryProvider;
-    uses PluginFactoryConfigurerProvider;
+    uses love.forte.simbot.component.ComponentFactoryProvider;
+    uses love.forte.simbot.component.ComponentFactoryConfigurerProvider;
+    uses love.forte.simbot.plugin.PluginFactoryProvider;
+    uses love.forte.simbot.plugin.PluginFactoryConfigurerProvider;
 
 }
