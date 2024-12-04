@@ -25,9 +25,16 @@ jobs:
         with:
           upload-result: true
           github-token: ${{ secrets.FORLIY_ACCESS_TOKEN }}
+          pr-mode: false
+          args: --apply-fixes
+          push-fixes: pull-request
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }} # read the steps about it below
           GITHUB_TOKEN: ${{ secrets.FORLIY_ACCESS_TOKEN }}
+
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
 
 
 
