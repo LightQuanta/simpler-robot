@@ -9,6 +9,7 @@ on:
 env:
   JAVA_VERSION: 21
   JAVA_DISTRIBUTION: zulu
+  GRADLE_VERSION: 8.5
 
 jobs:
   qodana:
@@ -31,7 +32,7 @@ jobs:
           fetch-depth: 0  # a full history is required for pull request analysis
 
       # setup Gradle
-      - name: Setup Gradle
+      - name: 'Setup Gradle'
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
