@@ -23,6 +23,7 @@ jobs:
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
+          cache: 'gradle'
 
       - uses: actions/checkout@v4
         with:
@@ -30,7 +31,7 @@ jobs:
           fetch-depth: 0  # a full history is required for pull request analysis
 
       # setup Gradle
-      - name: Gradle Publish Release
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
