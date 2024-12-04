@@ -9,7 +9,7 @@ on:
 env:
   JAVA_VERSION: 21
   JAVA_DISTRIBUTION: zulu
-  GRADLE_VERSION: 8.5
+  GRADLE_VERSION: 8.6
 
 jobs:
   qodana:
@@ -36,7 +36,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: assemble -i -s
+          arguments: assemble -i -s -x test --warning-mode all --build-cache
 
       - name: 'Qodana Scan'
         # https://www.jetbrains.com/help/qodana/github.html#Usage
