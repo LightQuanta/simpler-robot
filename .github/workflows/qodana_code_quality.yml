@@ -24,10 +24,18 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
           fetch-depth: 0  # a full history is required for pull request analysis
+
+      # setup Gradle
+      - name: Gradle Publish Release
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: assemble -i -s
+
       - name: 'Qodana Scan'
         # https://www.jetbrains.com/help/qodana/github.html#Usage
         uses: JetBrains/qodana-action@v2024.2
