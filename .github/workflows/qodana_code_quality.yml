@@ -31,12 +31,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
           fetch-depth: 0  # a full history is required for pull request analysis
 
-      # setup Gradle
       - name: 'Setup Gradle'
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: assemble -i -s -x test --warning-mode all --build-cache
+
+      - run: gradle assemble -i -s -x test --warning-mode all --build-cache
 
       - name: 'Qodana Scan'
         # https://www.jetbrains.com/help/qodana/github.html#Usage
