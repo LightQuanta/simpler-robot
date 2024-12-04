@@ -20,16 +20,16 @@ jobs:
       pull-requests: write
       checks: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+#          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
+          fetch-depth: 0  # a full history is required for pull request analysis
+
       - uses: actions/setup-java@v4
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'gradle'
-
-      - uses: actions/checkout@v4
-        with:
-#          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0  # a full history is required for pull request analysis
 
       - name: 'Setup Gradle'
         uses: gradle/actions/setup-gradle@v3
