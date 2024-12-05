@@ -26,6 +26,8 @@
 
 package love.forte.simbot.resource
 
+import kotlinx.io.Buffer
+import kotlinx.io.Source
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -59,7 +61,7 @@ import kotlin.jvm.JvmName
  *
  * @author ForteScarlet
  */
-public interface Resource {
+public sealed interface Resource {
     // TODO become `sealed` for ByteArrayResource and SourceResource.
 
     /**
@@ -83,11 +85,15 @@ public fun ByteArray.toResource(): ByteArrayResource = ByteArrayResourceImpl(thi
  *
  * @author forte
  */
-public interface ByteArrayResource : Resource {
+public interface ByteArrayResource : Resource, SourceResource {
     /**
      * 获取到字节数组结果。
      */
     override fun data(): ByteArray
+
+    override fun source(): Source {
+        return Buffer().apply { write(data()) }
+    }
 }
 
 /**
@@ -147,12 +153,18 @@ private data class ByteArrayResourceImpl(private val raw: ByteArray) : ByteArray
  * 一个可以读取到 [String] 内容物的拓展类型。
  * 是其他 [Resource] 类型的附加能力，但不属于一个标准的 [Resource] 类型。
  */
-public interface StringReadableResource : Resource {
+public interface StringReadableResource : SourceResource {
     /**
      * 读取此资源的 [String] 内容。
      */
     @Throws(Exception::class)
     public fun string(): String
+
+    override fun data(): ByteArray = string().encodeToByteArray()
+
+    override fun source(): Source {
+        return Buffer().apply { write(data()) }
+    }
 }
 
 /**

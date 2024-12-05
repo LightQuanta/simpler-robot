@@ -30,9 +30,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import love.forte.simbot.common.id.ID
 import love.forte.simbot.common.id.IDContainer
+import love.forte.simbot.message.At.Companion.equals
+import love.forte.simbot.message.At.Companion.hashCode
 import love.forte.simbot.message.OfflineImage.Companion.toOfflineImage
 import love.forte.simbot.message.Text.Companion.of
-import love.forte.simbot.resource.*
+import love.forte.simbot.resource.ByteArrayResource
+import love.forte.simbot.resource.Resource
+import love.forte.simbot.resource.ResourceBase64Serializer
+import love.forte.simbot.resource.fileResource
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.js.JsName
 import kotlin.jvm.*
@@ -348,7 +353,6 @@ public interface OfflineImage : Image {
          */
         @JvmStatic
         @JvmName("ofFilePath")
-        @ExperimentalIOResourceAPI
         public fun fileOfflineImage(filePath: String): OfflineImage =
             fileResource(filePath).toOfflineResourceImage()
 
@@ -363,7 +367,6 @@ public interface OfflineImage : Image {
          * @since 4.7.0
          */
         @JvmStatic
-        @ExperimentalIOResourceAPI
         @JvmName("ofFilePath")
         public fun fileOfflineImage(base: String, vararg parts: String): OfflineImage =
             fileResource(base, *parts).toOfflineResourceImage()
