@@ -27,6 +27,7 @@
 package love.forte.simbot.resource
 
 import kotlinx.io.Source
+import kotlinx.io.asInputStream
 import kotlinx.io.asSource
 import kotlinx.io.buffered
 import love.forte.simbot.resource.JvmStringReadableResource.Companion.DEFAULT_CHARSET
@@ -38,31 +39,47 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.nio.file.OpenOption
 import java.nio.file.Path
-import kotlin.Throws
 import kotlin.io.path.inputStream
 import kotlin.io.path.readBytes
 import kotlin.io.path.reader
 
 /**
+ * 从 [SourceResource] 中通过 [Source] 获取一个 [InputStream]。
+ */
+public fun SourceResource.inputStream(): InputStream {
+    return source().asInputStream()
+}
+
+/**
  * 能够获取到 [InputStream] 资源的 [Resource] 扩展实现。
+ *
+ * Deprecated since v4.10.0: 直接通过 [SourceResource.inputStream]
+ * 或 [Source.asInputStream] 即可将 [SourceResource] 中的 [Source] 转化为 [InputStream]。
+ *
+ * ```kotlin
+ * val input1 = resource.inputStream()
+ * val input2 = resource.source().asInputStream()
+ * ```
+ *
+ * Java 中分别对应 `Resources.inputStream(sourceResource)`
+ * 和 `SourcesJvmKt.asInputStream(source)`。
+ *
+ * ```java
+ * var input1 = Resources,inputStream(resource);
+ * var input2 = SourcesJvmKt.asInputStream(resource.source());
+ * ```
  *
  * @author forte
  */
-@OptIn(ExperimentalIOResourceAPI::class)
-public interface InputStreamResource : Resource {
-    /**
-     * 读取当前资源的所有字节数据。
-     * 默认通过 [inputStream] 读取。
-     *
-     */
-    @Throws(IOException::class)
-    override fun data(): ByteArray = inputStream().use { it.readAllBytes() }
-
+@Deprecated(
+    "Just use `SourceResource.inputStream()` to get InputStream from Source"
+)
+public interface InputStreamResource : SourceResource {
     /**
      * 获取可用于读取当前资源数据的输入流。
      */
     @Throws(IOException::class)
-    public fun inputStream(): InputStream
+    public fun inputStream(): InputStream = source().asInputStream()
 }
 
 /**
@@ -84,7 +101,6 @@ public interface JvmStringReadableResource : StringReadableResource {
     @Throws(IOException::class)
     public fun string(charset: Charset): String
 
-
     public companion object {
         /**
          * 默认编码格式: [Charsets.UTF_8]
@@ -97,8 +113,14 @@ public interface JvmStringReadableResource : StringReadableResource {
 /**
  * 能够获取到 [Reader] 资源的 [Resource] 扩展实现。
  *
+ * Deprecated since v4.10.0.
+ * 可以直接获取到 [InputStream], 进而直接获取到 reader, 此接口意义不大。
+ *
  * @author forte
  */
+@Deprecated(
+    "Just use `SourceResource.inputStream()` to get InputStream from Source"
+)
 public interface ReaderResource : JvmStringReadableResource {
     /**
      * 读取当前资源的字符串数据。
@@ -189,7 +211,6 @@ public interface FileResource : InputStreamResource, ReaderResource {
 public fun File.toResource(charset: Charset = DEFAULT_CHARSET): FileResource =
     FileResourceImpl(this, charset)
 
-@OptIn(ExperimentalIOResourceAPI::class)
 private data class FileResourceImpl(override val file: File, private val charset: Charset) :
     FileResource, SourceResource {
     override fun string(): String = string(charset)
@@ -278,7 +299,6 @@ public fun Path.toResource(
 ): PathResource =
     PathResourceImpl(this, charset, options)
 
-@OptIn(ExperimentalIOResourceAPI::class)
 private data class PathResourceImpl(
     override val path: Path,
     private val charset: Charset,
@@ -400,7 +420,6 @@ public fun URL.toResource(charset: Charset = DEFAULT_CHARSET): URIResource =
 public fun URI.toResource(charset: Charset = DEFAULT_CHARSET): URIResource =
     URIResourceImpl(this, charset, null)
 
-@OptIn(ExperimentalIOResourceAPI::class)
 private class URIResourceImpl(override val uri: URI, val charset: Charset, private var url: URL? = null) :
     URIResource,
     SourceResource {
