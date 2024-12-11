@@ -51,6 +51,15 @@ public fun SourceResource.inputStream(): InputStream {
 }
 
 /**
+ * 提供JVM平台独特实现的类型，与 [SourceResource] 内容相同。
+ *
+ * @see FileResource
+ * @see PathResource
+ * @see URIResource
+ */
+public sealed interface JvmSourceResource : SourceResource
+
+/**
  * 能够获取到 [InputStream] 资源的 [Resource] 扩展实现。
  *
  * Deprecated since v4.10.0: 直接通过 [SourceResource.inputStream]
@@ -148,7 +157,11 @@ public interface ReaderResource : JvmStringReadableResource {
  *
  * @author forte
  */
-public interface FileResource : InputStreamResource, ReaderResource {
+@Suppress("DEPRECATION")
+public interface FileResource :
+    JvmSourceResource,
+    InputStreamResource,
+    ReaderResource {
     /**
      * 与此资源关联的 [File]
      */
@@ -248,7 +261,11 @@ private data class FileResourceImpl(override val file: File, private val charset
  *
  * @author forte
  */
-public interface PathResource : InputStreamResource, ReaderResource {
+@Suppress("DEPRECATION")
+public interface PathResource :
+    JvmSourceResource,
+    InputStreamResource,
+    ReaderResource {
     /**
      * 与此资源关联的 [Path]
      */
@@ -350,7 +367,11 @@ private data class PathResourceImpl(
  *
  * @author forte
  */
-public interface URIResource : InputStreamResource, JvmStringReadableResource {
+@Suppress("DEPRECATION")
+public interface URIResource :
+    JvmSourceResource,
+    InputStreamResource,
+    JvmStringReadableResource {
     /**
      * 与此资源关联的 [URI]
      */

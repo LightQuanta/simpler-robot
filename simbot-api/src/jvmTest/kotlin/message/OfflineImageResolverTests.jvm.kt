@@ -33,6 +33,7 @@ import love.forte.simbot.message.OfflineImageResolver.Companion.resolve
 import love.forte.simbot.message.OfflinePathImage.Companion.toOfflineImage
 import love.forte.simbot.message.OfflineURIImage.Companion.toOfflineImage
 import love.forte.simbot.resource.Resource
+import love.forte.simbot.resource.ScheduledDeprecatedResourceApi
 import love.forte.simbot.resource.toResource
 import java.io.File
 import java.net.URI
@@ -59,6 +60,7 @@ class JvmOfflineImageResolverTests {
         U
     }
 
+    @OptIn(ScheduledDeprecatedResourceApi::class)
     @Test
     fun jvmOfflineImageValueResolverTest() = runTest {
         val path = Files.createTempFile("PRE", "SUF")
@@ -109,9 +111,7 @@ class JvmOfflineImageResolverTests {
             Value.UKN_R,
             suspendCancellableCoroutine { c ->
                 resolver.resolve(
-                    object : Resource {
-                        override fun data(): ByteArray = byteArrayOf()
-                    }.toOfflineImage(),
+                    byteArrayOf().toOfflineImage(),
                     c
                 )
             }

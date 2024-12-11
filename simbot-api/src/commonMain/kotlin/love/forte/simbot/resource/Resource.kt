@@ -62,8 +62,6 @@ import kotlin.jvm.JvmName
  * @author ForteScarlet
  */
 public sealed interface Resource {
-    // TODO become `sealed` for ByteArrayResource and SourceResource.
-
     /**
      * 读取此资源的字节数据。
      *
