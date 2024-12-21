@@ -45,7 +45,10 @@ import kotlin.io.path.reader
 
 /**
  * 从 [SourceResource] 中通过 [Source] 获取一个 [InputStream]。
+ *
+ * @since 4.10.0
  */
+@Throws(Exception::class)
 public fun SourceResource.inputStream(): InputStream {
     return source().asInputStream()
 }
@@ -459,3 +462,18 @@ private class URIResourceImpl(override val uri: URI, val charset: Charset, priva
 
     override fun toString(): String = "URIResource(uri=$uri, charset=$charset)"
 }
+
+/**
+ * 提供一个用于产生 [InputStream] 的供应函数 [provider]，
+ * 并得到一个 [SourceResource]。
+ *
+ * 得到的结果每次使用 [SourceResource.source] 都会通过 [provider]
+ * 获取一个 [Source]。[Source] 应当由使用者决定关闭时机，而不是在 [provider] 中。
+ *
+ * 函数本质上使用 [sourceResource]。
+ *
+ * @since v4.10.0
+ */
+@JvmName("valueOfInputStreamProvider")
+public fun inputStreamResource(provider: () -> InputStream): SourceResource =
+    sourceResource { provider().asSource().buffered() }

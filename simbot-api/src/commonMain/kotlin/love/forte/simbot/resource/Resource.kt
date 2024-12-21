@@ -48,6 +48,17 @@ import kotlin.jvm.JvmName
  * JVM 中的部分扩展、辅助API通过静态类 `Resources` 提供，
  * 例如 `Resources.valueOf(...)`。
  *
+ * ## 有限范围
+ *
+ * 从 `v4.10.0` 开始，[Resource] 接口转为 `sealed` 并有两个明确的子类型分支：
+ * - [ByteArrayResource]
+ * - [SourceResource]
+ *
+ * [ByteArrayResource] 代表一个可以**直接**使用 [ByteArray] 进行表示的资源，它也同样可以表示为 [SourceResource]。
+ *
+ * 其中，[SourceResource] 借助 `kotlinx-io` 库所提供的能力统一多平台的IO相关API（例如文件系统相关）。
+ * 如果你想要基于文件系统或其他与IO相关的内容构建一个 [Resource]，则参考 [SourceResource]。
+ *
  * ## 序列化
  *
  * [Resource] 提供了一个基于 [Base64] 进行序列化操作的 [ResourceBase64Serializer]。

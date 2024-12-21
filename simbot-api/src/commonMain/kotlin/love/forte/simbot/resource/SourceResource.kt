@@ -121,7 +121,7 @@ public fun Path.toResource(): SourceResource {
  *
  * @since 4.10.0
  */
-@JvmName("valueOf")
+@JvmName("valueOfSourceProvider")
 public fun sourceResource(provider: () -> Source): SourceResource {
     return SourceResourceImpl(provider)
 }
@@ -130,7 +130,11 @@ public fun sourceResource(provider: () -> Source): SourceResource {
 /**
  * 一个可以得到 [kotlinx.io.Source] 的 [Resource]。
  *
+ * 在 JVM 平台中 `Resources` 中会提供更多基于JVM文件系统构建 [SourceResource] 的 API。
+ *
  * @see fileResource
+ * @see sourceResource
+ * @see Path.toResource
  *
  * @since 4.7.0
  */
